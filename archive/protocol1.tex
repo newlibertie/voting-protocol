@@ -1,0 +1,48 @@
+
+\section{Voting Protocols}
+There is a semi-trusted \emph{dealer} $D$ who offers indelible write-only storage to enable the protocol
+execution for a distinct run of the voting protocol identified by $\mathbf{E}$.
+At the beginning of the vote, the dealer chooses and broadcasts $m$ primes $p_1\ldots p_m$
+corresponding to the $m$ voting choices, a random number $N$, as well as
+a large prime $P$ where ${\displaystyle P > p_j \forall p_j \in \{p_1\ldots p_m\}}$.
+
+\subsection{Basic non-threshold non-private voting protocol}
+Then the voting protocol proceeds as follows:
+\begin{enumerate}
+\item{
+$D$ publishes the signed message $\{\mathbf{E},N, P, p_1, \ldots, p_k\}_D$ onto
+the indelible storage.
+This message is visible to all the participants and announces the existence of an election.
+}
+\item{
+Every voter $V_i$ privately saves its vote $p_{i}$ and a random integer $s$.
+The voter also publishes its commitment $c_i \equiv  H(\mathbf{E},V_i,s,p_{i}^N \bmod P)$
+about its vote by writing the message
+$\{ \mathbf{E} , V_i , c_i \}$ onto the indelible storage.
+}
+\item{
+After a quorum of vote comittments have been written, each voter $V_i$ now
+writes the message
+$\{ \mathbf{E},V_i,s,p_{i}^N \bmod P \}$ 
+onto the indelible storage. This message is related to the previously created comittment as it
+contains the message which was used to create the committment.
+}
+%\item{
+%$V_i$ sends $\{x_i \equiv n p_i  \bmod P\}_i$ to $D$.  This message is either signed with the public key of $V_i$ or is secured through a third-party token as long as it establishes that only
+%$V_i$ is the source of the message.
+%}
+\item{
+$D$ waits for votes and then computes the product ${\displaystyle T = \prod_i p_{i}^N \bmod P }$.
+}
+\item{
+Check if $T$ is a multiple of $p_i^{mN} \bmod P$.  If so, you have $m$ votes for option $C_i$.  There will be a
+largest divisor which will provide the total votes for the given option.  Since all primes by definition can
+not be factors of each other, none of the votes for one choice can influence the count for other choices.
+}
+\end{enumerate}
+
+The voting protocol correctly counts the votes by virtue of the Chinese remainder theorem.  The vote computation
+is also publicly verifiable as long as the writing to indelible storage can avoid impersonation.  Finally,
+the protocol ensures that the voting choices are not disclosed unless a quorum of participants have comitted their vote.
+\subsection{Adding privacy to the voting protocol}
+The voting protocol 

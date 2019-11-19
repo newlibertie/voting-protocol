@@ -1,0 +1,91 @@
+
+\section{Introduction} \label{section:Introduction}
+
+The rise of online political discourse has counter-intuitively
+reduced the ability of people to reason, understand, and arrive at
+sensible political positions supported by large majorities of people.
+% TODO : improve focus of the remaining in paragraph
+Even though social networks like Facebook and Twitter have been used for political purposes, their effectiveness has had serious shortcomings. Most often the discussions tend to be shallow, and favor one extreme view or another and thereby fails to represent the broad spectrum of political preferences. This flattening of discourse also has the side effect of silencing voices which may differ from the prevalent majority opinion because of fear of retribution.
+
+Lacking a reliable universally trusted mechanism
+for calculating the true public opinions 
+is a problem.
+It creates an incentive for 
+politicians, news media,  and even pollsters to use
+propaganda and fake news in order to \emph{build} public opinions
+aligned with their own narrow interests.
+
+\subsection{Solution approach}
+\paragraph{Coercion freeness}
+Solving the problem of self-censorship requires
+the following guarantee of privacy:
+even though the voters are well known, the choices made by them
+remain private.
+Coercion freeness goes further by ensuring that 
+voters can not provide evidence about the choice they made.
+This protects the privacy of voters by ensuring that an adversary can
+not deduce the vote count on a subset of voters by
+colluding with malicious voters.
+A combination of systems security
+methods along with a cryptographic voting protocol
+are used to provide coercion-freeness in our
+solution~\cite{Cramer:1997:SOE:1754542.1754554,Karlof:2005:CVP:1251398.1251401}.
+
+\paragraph{Universal verifiability}
+The problem of potential pollster bias is addressed by having
+a public bulletin board where all the ballots cast in the poll
+can be validated. The bulletin board also exposes a computation
+on the homomorphically encrypted ballots such that the
+poll result can be be verified by anyone.  This universal
+verifiability of poll results addresses the possibility of the pollster
+making up poll results other than those derived from the ballots.
+Non-interactive zero knowledge proofs based on Schnorr
+protocol~\cite{Cramer:1994:PPK:646759.705842}
+are used to support universal verifiability.  These proofs
+are constructed for encrypted ballots as well as for
+the poll result computation. 
+Having publicly accessible universally verifiable proofs ensures
+that the disclosed ballots are correctly tallied.
+The complementary problem of ballot hiding is handled by
+having the voter and the pollster engage in digitally signed communication
+during ballot casting.  Any divergence from the correct voting
+protocol is provable and shared with the public.
+
+
+\paragraph{Deferring voter eligibity decisions}
+Secure voting has traditionally been associated with government
+or other official elections.  Accordingly, prior research and implementations
+have focussed on enabling official or government elections where
+establishing voter eligibility is typically the first stage of the
+process.  We believe this choice constrains the existing approaches, thereby
+limiting their applicability.  Our approach is
+to defer voter eligibility to human judgment.  The eligibility decisions are done after
+the ballots have been cast and the eligibility choices are universally verifiabile.
+
+
+
+\paragraph{Enabling large scale secure polling}
+We propose to secure the polling mechanism while leaving the policy on voter eligibilty
+to human pollsters.  Removing the identity insfrastructure as a first class
+participant makes it easy for unsophisiticated pollsters set up secure polls. 
+Using the previously described building blocks, we propose to allow
+lay users to setup and run cryptographically secure polls over the world wide
+web, and yet derive poll results which can pass serious scrutiny.
+Eliminating the voter pre-verification requirement also makes our solution
+suitable for \emph{automatic polls} where active human ballot casting can be eliminated entirely.
+For example,
+one may automatically calculate the
+popularity of political positions on online social networks by having a
+opinion classifier automatically feed its results into a virtual opinion poll.
+Depending on the application area, an appropriate level of effort can be invested in
+voter verification in order to operate at a suitable level of accuracy versus
+convenience trade-off.  
+
+
+
+
+%\paragraph{Outline}
+%The remainder of this article is organized as follows.
+%Section~\ref{previous work} gives account of previous work.
+%Finally, Section~\ref{conclusions} gives the conclusions.
+

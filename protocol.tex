@@ -1,0 +1,121 @@
+
+\section{Voting Protocol}
+
+% eventually consider moving to contributions subsection if needed
+The voting protocol closely follows the cryptographic
+setup described in~\cite{Cramer:1997:SOE:1754542.1754554}.  The
+threshold encryption feature is eliminated and replaced with a single
+pollster service.
+This is justified on the grounds that preventing malicious voters from voting is not a
+goal of this solution.  That aspect is left to the human level pollsters and human authorities.
+However, our protocol ensures that the set of voting parties, the subset of eligible
+voters selected after ballot casting, and the decisions about
+accepted votes are publicly verifiable.
+Another aspect of differentiation is coercion-freeness, which
+is an important requirement for a trustable voting infrastucture,
+as described in~\cite{Karlof:2005:CVP:1251398.1251401}.
+% TODO:  any claim here?
+The voting protocol can be understood in terms of various phases of a
+particular vote.
+
+\subsection{Poll creation}
+On receiving a request to create a poll, the Pollster service
+chooses a large prime $p$, a generator $g$, and an integer private key $s < p$
+large enough such that an $O(\sqrt s)$ time algorithm is computationally
+infeasible.
+The public key $h \equiv g^s\bmod p$ is computed from the private key.
+The values $p$, $g$ and $h$
+are exposed on the public bulletin board.
+
+This step shall also disclose the non-cryptographic
+attributes of the poll. For example, the expected number of voters,
+the duration of the poll, as well as the
+locations where a vote may be cast and the location of the
+bulletin board where the results shall be available.
+
+This stage can also be used to cryptographically commit the
+polling parameters.  Accordingly the hash of the contents of the
+initial bulletin board shall be stored on a block-chain.
+
+
+\subsection{Casting encrypted ballots}
+
+The specific values sent out in the encrypted ballots depends on
+whether the vote is positive or negative.  The values of the variables
+used in casting the universally verifiable ballot are shown in
+Table~\ref{table:ballotparams}.  The values are expressed in terms of
+a generator $G$ and random numbers $\alpha$, $r_1$ and $r_2$.
+
+
+
+\begin{table}[t]
+\caption{Values of ballot parameters}
+\begin{center}
+  \begin{tabular}{c|c|c} 
+    Variable & Vote $+1$ & Vote $-1$ \\\hline
+    $x$   &  $g^\alpha$ &   $g^\alpha$ \\
+    $y$   &  $h^\alpha G$ & $\frac{h^\alpha}{G}$  \\
+    $a_1$ &  $g^{r_1}x^{d_1}$ & $g^\omega$  \\
+    $b_1$ &  $h^{r_1}(yG)^{d_1}$ & $h^\omega$  \\
+    $a_2$ &  $g^\omega$ &  $g^{r_2}x^{d_2}$ \\
+    $b_2$ &  $h^\omega$ & $h^{r_2} \big( \frac{y}{G} \big)^{d_2}$ \\
+\end{tabular}
+\label{table:ballotparams}
+\end{center}
+\end{table}
+
+
+
+% TODO : get fig from jcn and data from page in yellow book
+The universally veriable ballot to be cast by the voter $v_i$
+can be expressed as a 3-tuple $\{T,C,D\}$, where:
+\begin{equation} \label{eq3}
+\begin{split}
+T & = \{ x, y, a_1, b_1, a_2, b_2 \} \\
+C & = H( T || v_i ) \\
+D & = \{d_1, d_2, r_1, r_2 \} 
+\end{split}
+\end{equation}
+
+Any verifier needs to establish that i)
+the vote itself is valid, i.e. is a $+1$ or $-1$, and ii) that the ElGamal
+pair $(x,y) \equiv (g^\alpha, h^\alpha m)$ is properly constructed using the
+publicly known values $g$ and $h$.  These properties follow from testing
+the following on the encrypted ballot:
+
+\begin{equation} \label{eq4}
+\begin{split}
+C & = d_1 + d_2  \\
+a_1 & = g^{r_1} x^{d_1}  \\
+b_1 & = h^{r_1} (yG)^{d_1} \\
+a_2 & = g^{r_2} x^{d_2} \\
+b_2 & = h^{r_2}(\frac{y}{G})^{d_2} \\
+\end{split}
+\end{equation}
+
+
+\subsection{Counting ballots}
+
+Consider the encrypted vote part of the ballot $(x,y) \equiv (g^\alpha, h^\alpha G^m)$
+where $m \in {+1, -1}$.
+The homomorphic property of the encryption allows us to take the product(modulo
+the large prime) of the ElGamal pairs, and the resultant values can be decrypted to
+arrive at the total.   Consider several encrypted ballots
+$(x_i,y_i) \equiv (g^{r_i} , h^{r_i} G^{m_i})$, and let 
+\[
+(X,Y) \equiv (\prod x_i , \prod y_i) 
+\]
+Then it follows that:
+\begin{equation} \label{eq5}
+\begin{split}
+  \frac{Y}{X^s} & = \frac{\prod h^{r_i} G^{m_i}}{ \prod (g^{r_i})^s } \\
+  & =  \frac{\prod g^{sr_i} G^{m_i}}{ \prod (g^{sr_i}) } \\
+  & = \prod G^{m_i} \\
+   & = G^{\sum m_i}
+\end{split}
+\end{equation}
+Hence the total vote count is given as $\log_G \frac{Y}{X^s}$, which can be
+calculated by the pollster service as it knows the private key $s$ corresponding
+to this poll.
+
+% zkp of this total is correct

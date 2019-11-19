@@ -1,0 +1,175 @@
+
+
+\section{Preliminaries}
+
+Our solution can be described in terms of the participants,
+the  notations used to describe the interactions,
+and 
+the primitives used to achieve the desired security
+properties.
+
+\subsection{Participants}
+\paragraph{Pollster service}
+The poll is run by a \emph{Pollster service} application which
+allows users to interact with it using a RESTful
+interface.  The pollster service implements the following functions:
+ 
+\begin{itemize}
+\item{ \textsc{Create poll\\}
+  Lay users, or \emph{human pollsters}, can define polls.
+  Upon poll creation the pollster service accepts ballots
+  on a voting URL.  This voting URL can be shared with prospective voters.
+}
+\item{ \textsc{Accept ballot\\}
+  Voters cast ballots using the voting URL RESTful interface exposed
+  by the pollster service. Because the ballot needs to have
+  a well defined structure with cryptographic contents, an
+  accompanying library is supported to make it easy for lay voters to
+  cast their votes.
+}
+\item{ \textsc{Bulletin board\\}
+  The pollster service publishes ballots on a bulletin
+  board.
+  Once a sufficient number of ballots have been collected,
+  and any disallowed voters trimmed, 
+  a tally of valid votes are also published on the bulletin board.
+}
+\end{itemize}
+
+\paragraph{Voters}
+The voters are expected to be unsophisticated internet users who
+cast their ballots through a \emph{votster widget}.  The function of this
+widget is to faithfully convert the voter choice into a anonymity
+preserving ballot and to post it on the \textsc{Accept ballot} interface
+of the Pollster service.
+
+\paragraph{Verifiers}
+Verifiers may be lay users or sophisticated cryptographers who can
+rerun the ballots-to-tally computation being exposed on the
+\textsc{Bulletin board} interface of the the pollster service.
+
+
+\subsection{Notations}
+
+\begin{table}[t]
+\caption{Notation}
+\begin{center}
+\begin{tabular}{|cc|} \hline
+$K_A$   &  Public key of the participant $A$\\
+$K^{-1}_A$   &  Private key of the participant $A$ \\
+$\{x,y,z\}$   &  A message containing $x$, $y$ and $z$ \\
+$\{x\}_A$ &  A message signed by $A$ \\ \hline
+\end{tabular}
+\label{table:notation}
+\end{center}
+\end{table}
+  
+The general notations used in this paper are shown in Table~\ref{table:notation}.
+We consider $n$ voters $v_1\ldots v_n$  who want to vote on a
+binary poll $\mathcal{B}$ with choices $0$ or $1$.
+The pollster service is represented as $\mathbf{P}$.
+It has a well known public key $K_P$ which
+is used for creating digitally signed messages.
+
+The participants communicate with each other using messages, which are
+represented using the security protocol
+notation~\footnote{ Even though an abstract
+  security protocol notation is used for protocol
+  specification and analysis, the implemented messages may be represented
+  in a more machine friendly manner, for example as JSON objects.
+}.
+For example, $A$ sending a message containing
+$X$ and $Y$ to $B$ is represented as follows:
+\[
+A \rightarrow B \hspace{10pt} : \hspace{10pt} \{X,Y\}  
+\]
+
+\subsection{ElGamal cryptosystem}
+The ElGamal cryptosystem is a well known
+and established public key
+cryptosystem based on the Discrete Logarithms problem~\cite{1057074}.
+Its security
+comes from the assumption that computing discrete logarithms over
+a prime group is hard.
+\begin{assumption}
+Given a large prime $p$ and a generator $g$,
+it is computationally infeasible to find $x$ from $y \equiv g^x \bmod p$.
+\end{assumption}
+
+The ElGamal cryptosystem works by all players initially agreeing to a large prime $p$
+and a generator $g$.  The receiver chooses a secret key $s < p$ and publishes
+the public key $h \equiv g^s \bmod p$.  In the context of the ElGamal cryptosystem
+we will assume all randmom choices and operations are done
+modulo $p$.  Hence one can succintly represent the
+public key publication message as
+\[
+\text{Receiver} \rightarrow \text{Sender} \hspace{10pt} : \hspace{10pt} \{g^s\}  
+\]
+
+Suppose the sender wants to send a message $m$ to the receiver, then it chooses
+a random integer $r$ and sends the following message:
+\[
+\text{Sender} \rightarrow \text{Receiver} \hspace{10pt} : \hspace{10pt} \{g^r, h^rm\}
+\]
+
+Since the receiver does not know about the random choice $r$ made by the sender, we
+represent the received message as $\{x, y\}$.  Using its secret $s$, the receiver recovers
+the message by computing $\frac{y}{x^s}$, as shown below.
+\begin{equation} \label{eq1}
+\begin{split}
+\frac{y}{x^s} & = \frac{h^rm}{g^{r^s}} \\
+              & = \frac{g^{r^s}m}{g^{r^s}}\\
+              & = m
+\end{split}
+\end{equation}
+
+\subsection{Non interactive zero knowledge proofs}
+
+Zero knowledge proofs permit a prover to convince a verifier about their knowledge
+of a particular information without divulging that information.  The proving
+process can either take the form of an interactive session where the verifier
+can issue challenges and the prover can respond correctly.  These ineractions can
+be converted into an equivalent non-interactive proof, thereby avoiding the need for participants
+to be online.  One such construction is the Schnorr protocol, which 
+provides the universal verifiability of ballots and poll results.
+
+The objective of the Schnorr protocol is for the prover to convince a
+verifier that it knows the discrete logarithm $x$ of a well known
+value $y \equiv g^x$ \emph{without} disclosing the value $x$.  The interactive
+protocol proceeds by the prover and verifier selecting random numbers,
+$e$ and $c$ respectively,
+and exchanging the following messages:
+\[
+\begin{array}{lcccc} 
+  \text{Prover} \rightarrow \text{Verifier} & & : & & \{ t \equiv g^e  \} \\
+  \text{Verifier} \rightarrow \text{Prover} & & : & & \{ c \} \\
+  \text{Prover} \rightarrow \text{Verifier} & & : & & \{ d \equiv e - xc \} 
+\end{array}
+\]
+The verifier checks if $y^cg^d = t$, which follows from :
+\begin{equation} \label{eq2}
+\begin{split}
+y^cg^d & = g^{xc}g^d \\
+       & = g^{(xc + d)}  \\
+       & = g^{(xc + e - xc)} \\
+       & = g^e \\
+       & = t 
+\end{split}
+\end{equation}
+
+A non-interactive proof is generated by constraining the verifier challenge
+$c$ to be predictable by the prover yet to resist an adaptive
+ciphertext attack.
+This can be done by having it depend on a secure hash function $H$ whose
+output is sufficiently random and unpredictable.  Then the zero
+knowledge interactive protocol with the verifier $v_i$
+can be transformed into its non-interactive version with a
+transcript as follows:
+\[
+\{ g^e , H(g^e, v_i) , e - xH(g^e, v_i) \} 
+\]
+
+Such a transcript can be produced by the prover in advance, without
+requiring any action from the verifier.  This Schnorr protocol type
+construction is used for ensuring universal verifiability of several
+properties of the voting protocol.
