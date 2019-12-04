@@ -68,8 +68,12 @@ The specific values sent out in the encrypted ballots depends on
 whether the vote is positive or negative.  The values of the variables
 used in casting the universally verifiable ballot are shown in
 Table~\ref{table:ballotparams}.  The values are expressed in terms of
-a generator $G$ and random numbers $\alpha$, $r_1$ and $r_2$.
-% TODO explain is G a new generator and if so why
+a new generator $G$ and random numbers $\alpha$, $r_1$ and $r_2$.
+This new generator is required in order to
+provide the zero knowledge proof of validity of the ballot,
+whereas generator $g$ was previously used for casting encrypted ballot.
+% TODO check if the above is sufficient? G a new generator and if so why
+\marginpar{Validate} 
 
 
 \begin{table}[t]
@@ -142,4 +146,7 @@ Hence the total vote count is given as $\log_G \frac{Y}{X^s}$, which can be
 calculated by the pollster service as it knows the private key $s$ corresponding
 to this poll.
 
-% zkp of this total is correct
+
+\bf{TODO : zkp of this total is correct}
+
+
