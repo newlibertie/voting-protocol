@@ -3,20 +3,39 @@
 
 % eventually consider moving to contributions subsection if needed
 The voting protocol closely follows the cryptographic
-setup described in~\cite{Cramer:1997:SOE:1754542.1754554}.  The
-threshold encryption feature is eliminated and replaced with a single
-pollster service.
-This is justified on the grounds that preventing malicious voters from voting is not a
-goal of this solution.  That aspect is left to the human level pollsters and human authorities.
-However, our protocol ensures that the set of voting parties, the subset of eligible
+setup described in Schoenmaker et. al.'s~\cite{Cramer:1997:SOE:1754542.1754554}
+multi authority election scheme.  Given the different threat model,
+the threshold encryption multi authority features are eliminated
+and replaced with a single pollster service.
+
+This is justified on the grounds that neither preventing malicious voters from
+voting nor defending against malicious authorities is a
+goal of this solution.
+
+The malicious voter handling aspect is left to the human level pollsters
+and human authorities which can presumably scale according to the level
+of interest in the specific poll.
+Our protocol ensures that the set of voting parties, the subset of eligible
 voters selected after ballot casting, and the decisions about
 accepted votes are publicly verifiable.
-Another aspect of differentiation is coercion-freeness, which
+Another aspect of differentiation is \emph{coercion-freeness}, which
 is an important requirement for a trustable voting infrastucture,
 as described in~\cite{Karlof:2005:CVP:1251398.1251401}.
-% TODO:  any claim here?
+This property follows from the fact that only the aggregate totals are ever
+decrypted, thereby providing voters deniability which in turn makes the
+election coercion-free by allowing the voter to lie about the vote
+they had cast\footnote{Adding a legal clause at the bottom of the
+  ballot stating that it is your right, and under some circumstances,
+  your duty, to lie about your vote;
+  may make it even more obvious to less sophisticated voters.  Achieving
+  coercion freeness requires both social and technological actions.  Our protocol
+  provides the latter.}.
+
+Malicious authorities are removed from the threat model with the view
+of achieving authority reputation via open source implementation and massive
+public validation of the algorithms and other artifacts.
 The voting protocol can be understood in terms of various phases of a
-particular vote.
+particular vote:
 
 \subsection{Poll creation}
 On receiving a request to create a poll, the Pollster service
@@ -35,7 +54,8 @@ bulletin board where the results shall be available.
 
 This stage can also be used to cryptographically commit the
 polling parameters.  Accordingly the hash of the contents of the
-initial bulletin board shall be stored on a block-chain.
+initial bulletin board shall be stored on a blockchain
+in a future version of our implementation.
 
 
 \subsection{Casting encrypted ballots}
