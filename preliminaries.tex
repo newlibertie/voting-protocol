@@ -126,15 +126,16 @@ the message by computing $\frac{y}{x^s}$, as shown below.
 \end{split}
 \end{equation}
 
-\subsection{Non interactive zero knowledge proofs}
+\subsection{Non-interactive zero knowledge proofs}
 
 Zero knowledge proofs permit a prover to convince a verifier about their knowledge
 of a particular information without divulging that information.  The proving
 process can either take the form of an interactive session where the verifier
 can issue challenges and the prover can respond correctly.  These ineractions can
-be converted into an equivalent non-interactive proof, thereby avoiding the need for participants
+be converted into an equivalent non-interactive proof,
+thereby avoiding the need for participants
 to be online.  One such construction is the Schnorr protocol, which 
-provides the universal verifiability of ballots and poll results.
+provides universal verifiability.
 
 The objective of the Schnorr protocol is for the prover to convince a
 verifier that it knows the discrete logarithm $x$ of a well known
@@ -172,7 +173,11 @@ transcript as follows:
 \{ g^e , H(g^e, v_i) , e - xH(g^e, v_i) \} 
 \]
 
+% TODO : isnt it true we can have recursively contained nizkp s
+% such that $v_i \equiv \star$ is universally verifiable, whereas
+% org.* may be a more specific nizkp
+
 Such a transcript can be produced by the prover in advance, without
-requiring any action from the verifier.  This Schnorr protocol type
+requiring any action from the verifier.  This Schnorr protocol
 construction is used for ensuring universal verifiability of several
 properties of the voting protocol.
