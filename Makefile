@@ -1,7 +1,7 @@
 .SUFFIXES : .ps .tex .dvi
 
 TARGET=vp
-SRCS=intro.tex protocol.tex vp.tex vp.bib Makefile
+SRCS=intro.tex protocol.tex preliminaries.tex vp.tex vp.bib Makefile
 
 vp.dvi:$(SRCS) 
 	latex vp.tex || xmessage -timeout 3 Failed to compile vp.tex 
