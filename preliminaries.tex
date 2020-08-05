@@ -98,8 +98,11 @@ it is computationally infeasible to find $x$ from $y \equiv g^x \bmod p$.
 
 The ElGamal cryptosystem works by all players initially agreeing to a large prime $p$
 and a generator $g$.  The receiver chooses a secret key $s < p$ and publishes
-the public key $h \equiv g^s \bmod p$.  In the context of the ElGamal cryptosystem
-we will assume all randmom choices and operations are done
+the public key $h \equiv g^s \bmod p$, which is assumed to be well-known to
+all parties.
+
+In the context of the ElGamal cryptosystem
+we will assume all random choices and operations are done
 modulo $p$.  Hence one can succintly represent the
 public key publication message as
 \[
