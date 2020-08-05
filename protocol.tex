@@ -24,20 +24,22 @@ Another aspect of differentiation is \emph{coercion-freeness}, which
 is an important requirement for a trustable voting infrastucture,
 as described in~\cite{Karlof:2005:CVP:1251398.1251401}.
 This property follows from the fact that only the aggregate totals are ever
-decrypted, thereby providing voters deniability which in turn makes the
+decrypted, thereby providing voters deniability about their vote,
+which in turn makes the
 election coercion-free by allowing the voter to lie about the vote
-they had cast\footnote{Adding a legal clause at the bottom of the
+they had cast\footnote{Ideally one would add a legal clause at the bottom of the
   ballot stating that it is your right, and under some circumstances,
-  your duty, to lie about your vote;
-  may make it even more obvious to less sophisticated voters.  Achieving
-  coercion freeness requires both social and technological actions.  Our protocol
-  provides the latter.}.
+  perhaps your duty, to lie about your vote. Such a disclaimer
+  would make the deniability based coercion freeness obvious to
+  unsophisticated voters.  Achieving coercion freeness requires both social and
+  technological actions.  Our protocol provides the latter.}.
 
-Malicious authorities are removed from the threat model with the view
-of achieving authority reputation via open source implementation and massive
-public validation of the algorithms and other artifacts.
-The voting protocol can be understood in terms of various phases of a
-particular vote:
+Malicious authorities are not considered as a threat because we
+propose to establish authority honesty via open source implementation as well
+as massive public validation of the algorithms and artifacts involved.
+The authority supports the fully open source voting protocol in an
+open verifiable manner.  The voting protocol is explained below in terms of
+its phases:
 
 \subsection{Poll creation}
 On receiving a request to create a poll, the Pollster service
