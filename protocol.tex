@@ -69,7 +69,7 @@ whether the vote is positive or negative.  The values of the variables
 used in casting the universally verifiable ballot are shown in
 Table~\ref{table:ballotparams}.  The values are expressed in terms of
 a generator $G$ and random numbers $\alpha$, $r_1$ and $r_2$.
-
+% TODO explain is G a new generator and if so why
 
 
 \begin{table}[t]
@@ -96,7 +96,7 @@ can be expressed as a 3-tuple $\{T,C,D\}$, where:
 \begin{equation} \label{eq3}
 \begin{split}
 T & = \{ x, y, a_1, b_1, a_2, b_2 \} \\
-C & = H( T || v_i ) \\
+C & = H( T || v_i ) \\    % subtle conceptual bug - v_i is voter not verifier but see intro
 D & = \{d_1, d_2, r_1, r_2 \} 
 \end{split}
 \end{equation}
