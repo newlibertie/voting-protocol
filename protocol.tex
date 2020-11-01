@@ -73,7 +73,7 @@ This new generator is required in order to
 provide the zero knowledge proof of validity of the ballot,
 whereas generator $g$ was previously used for casting encrypted ballot.
 % TODO check if the above is sufficient? G a new generator and if so why
-\marginpar{Validate} 
+
 
 
 
@@ -88,6 +88,8 @@ whereas generator $g$ was previously used for casting encrypted ballot.
     $b_1$ &  $h^{r_1}(yG)^{d_1}$ & $h^\omega$  \\
     $a_2$ &  $g^\omega$ &  $g^{r_2}x^{d_2}$ \\
     $b_2$ &  $h^\omega$ & $h^{r_2} \big( \frac{y}{G} \big)^{d_2}$ \\
+    $r_1$ &    Random     &  $\omega - \alpha d_1$ \\
+    $r_2$ &  $\omega - \alpha d_2$ & Random \\
 \end{tabular}
 \label{table:ballotparams}
 \end{center}
@@ -148,6 +150,25 @@ calculated by the pollster service as it knows the private key $s$ corresponding
 to this poll.
 
 
-\bf{TODO : zkp of this total is correct}
+%\bf{TODO : zkp of this total is correct}
 
+
+
+\subsection{Verification}
+\bf{TODO : move to appendix}.  Positive vote for test 3, i.e. $a_2 = g^{r_2} x^{d_2}$ ? :
+\begin{equation}
+  \begin{split}
+    a2 & = g^{r2} x^{d2} \\
+    & = g^{\omega - \alpha d_2}  g^{\alpha d_2} \\
+    & = g^{\omega}  \\
+  \end{split}
+\end{equation}
+
+Negative vote for test 3:
+\begin{equation}
+  \begin{split}
+    a2 & = g^{r2} x^{d2} \\
+    & = g^{r_2}  x^{d2} \\
+  \end{split}
+\end{equation}
 
